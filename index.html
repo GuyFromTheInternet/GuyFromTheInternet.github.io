@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sound Player</title>
+    <title>Silent Alarm</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('image.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+    </style>
     <script>
-        window.onload = function() {
-            var audio = new Audio('https://raw.githubusercontent.com/GuyFromTheInternet/testingtherepository/refs/heads/main/sleepphonk.MP3');
-            audio.volume = 1; // Max volume
+        window.addEventListener('load', function() {
+            var audio = new Audio('https://guyfromtheinternet.github.io/sleepphonk.MP3');
+            audio.volume = 1;
+            
+            // Attempt autoplay and catch errors
             audio.play().catch(error => {
-                console.log('Autoplay was prevented:', error);
-                // Some browsers require user interaction first
+                // Create fallback play button
+                const btn = document.createElement('button');
+                btn.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    padding: 20px;
+                    font-size: 2em;
+                    z-index: 1000;
+                `;
+                btn.textContent = 'Click to Play Sound';
+                btn.onclick = () => {
+                    audio.play();
+                    btn.remove();
+                };
+                document.body.appendChild(btn);
             });
-        };
+        });
 
         window.addEventListener('beforeunload', function(e) {
             e.preventDefault();
@@ -19,7 +47,5 @@
     </script>
 </head>
 <body>
-    <h1>Playing Sound...</h1>
-    <p>Close this window or navigate away to stop the sound</p>
 </body>
 </html>
