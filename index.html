@@ -6,39 +6,48 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('image.jpeg') no-repeat center center fixed;
+            background: url('image.jpg') no-repeat center center fixed;
             background-size: cover;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
         }
+        #hiddenBtn {
+            opacity: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
     </style>
     <script>
-        window.addEventListener('load', function() {
-            var audio = new Audio('https://guyfromtheinternet.github.io/sleepphonk.MP3');
+        function playAudio() {
+            const audio = new Audio('https://guyfromtheinternet.github.io/sleepphonk.MP3');
             audio.volume = 1;
             
-            // Attempt autoplay and catch errors
+            // iOS requires specific playback activation
             audio.play().catch(error => {
-                // Create fallback play button
+                // Create invisible click overlay
                 const btn = document.createElement('button');
-                btn.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    padding: 20px;
-                    font-size: 2em;
-                    z-index: 1000;
-                `;
-                btn.textContent = 'Click to Play Sound';
+                btn.id = 'hiddenBtn';
+                btn.textContent = ' ';
                 btn.onclick = () => {
                     audio.play();
                     btn.remove();
                 };
                 document.body.appendChild(btn);
             });
-        });
+        }
+
+        // Attempt autoplay immediately
+        window.addEventListener('load', playAudio);
+
+        // Attempt autoplay on any user gesture
+        document.addEventListener('click', playAudio);
+        document.addEventListener('touchstart', playAudio);
+        document.addEventListener('keypress', playAudio);
 
         window.addEventListener('beforeunload', function(e) {
             e.preventDefault();
